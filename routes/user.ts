@@ -4,7 +4,7 @@ import { createUser, getUser, updateUser } from "../schema/schema";
 import jwt from "jsonwebtoken";
 import JWT_SECRET from "../config";
 const { Router } = require("express");
-const authMiddleware = require("../authMiddleware")
+import authMiddleware from "../authMiddleware";
 
 const router = Router();
 
@@ -57,6 +57,8 @@ const signinBody = z.object({
     password: z.string()
 })
 
+let USER_NAME :string="";
+
 router.post("/signin", async (req: Request, res:Response) => {
   const { success } = signinBody.safeParse(req.body);
   const { username } = req.body;
@@ -70,7 +72,7 @@ router.post("/signin", async (req: Request, res:Response) => {
 
   if (user) {
       const token = jwt.sign(username, JWT_SECRET);
-
+      USER_NAME= req.body.username;
       res.json({
           token: token
       })
@@ -89,21 +91,21 @@ const updateBody = z.object({
     lastName: z.string().optional(),
 })
 
-// router.put("/update:username", authMiddleware, async (req: Request, res: Response) => {
-//   const { success } = signupBody.safeParse(req.body);
-//   const updatedFields = req.body;
-//     if (!success) {
-//         res.status(411).json({
-//             message: "Error while updating information"
-//         })
-//     }
-
-//     const updatedUser = updateUser(user,updatedFields)
-
-//     res.json({
-//         message: "Updated successfully"
-//     })
-// })
+router.put("/update", authMiddleware, async (req: Request, res: Response) => {
+  const { success } = updateBody.safeParse(req.body);
+  const updatedFields = req.body;
+    if (!success) {
+        res.status(411).json({
+            message: "Error while updating information"
+        })
+    }
+    if(USER_NAME != ""){
+    const updatedUser = updateUser(USER_NAME,updatedFields);
+    }
+    res.json({
+        message: "Updated successfully"
+    })
+})
 
 
 export {router, HTTP};

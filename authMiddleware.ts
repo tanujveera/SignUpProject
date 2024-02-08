@@ -15,9 +15,7 @@ const authMiddleware = (
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res
-      .status(HTTP.FORBIDDEN)
-      .json({ error: "Authorization header missing or invalid" });
+    return res.json({ error: "Authorization header missing or invalid" });
   }
 
   const token = authHeader.split(" ")[1];
@@ -27,7 +25,7 @@ const authMiddleware = (
     req.decodedValue = decoded;
     next();
   } catch (err) {
-    return res.status(HTTP.FORBIDDEN).json({});
+    return res.json({});
   }
 };
 

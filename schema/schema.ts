@@ -32,8 +32,9 @@ export async function getUser(userName: string) {
 //Get all users
 export async function getAllUsers() {
   const users = await prisma.user.findMany();
-  console.log("All users " + users);
-  return users;
+  const allusers = users.map(user=> user);
+  console.log(allusers);
+  return allusers;
 }
 //Delete user
 export async function deleteUser(userName: string) {

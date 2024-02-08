@@ -1,6 +1,6 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, json } from "express";
 import z from "zod";
-import { createUser, getUser, updateUser } from "../schema/schema";
+import { createUser, deleteAllUsers, deleteUser, getAllUsers, getUser, updateUser } from "../schema/schema";
 import jwt from "jsonwebtoken";
 import JWT_SECRET from "../config";
 const { Router } = require("express");
@@ -95,17 +95,59 @@ router.put("/update", authMiddleware, async (req: Request, res: Response) => {
   const { success } = updateBody.safeParse(req.body);
   const updatedFields = req.body;
     if (!success) {
-        res.status(411).json({
+        res.json({
             message: "Error while updating information"
         })
     }
-    if(USER_NAME != ""){
+    // if(USER_NAME != ""){
     const updatedUser = updateUser(USER_NAME,updatedFields);
-    }
+    // }
     res.json({
         message: "Updated successfully"
     })
 })
 
+//get all users
+router.get("/allusers", async(req:Request, res:Response)=>{
+  const allusers = await getAllUsers();
+  res.json(allusers);
+})
+
+//Delete a user
+const deleteZUser = z.object({
+  username: z.string().email()
+})
+
+router.post('/delete', async(req:Request, res:Response)=>{
+  const {success} = deleteZUser.safeParse(req.body);
+  if(!success){
+    res.json({
+      message:"User not found to delete"
+    })
+  }
+  const user = await getUser(req.body.username);
+  if(user){
+    const deletedUser = deleteUser(req.body.username);
+    res.json({
+      message:"User deleted"
+    })
+  }
+  res.json({
+    message:"User Not deleted"
+  })
+
+})
+
+router.post('/deleteAll', async(req:Request, res:Response)=>{
+  const deleted_Users = await deleteAllUsers();
+  if(deleted_Users){
+    res.json({
+    message:"Deleted All users"
+    })
+  }
+  res.json({
+    message:"Couldn't delete all users"
+  })
+})
 
 export {router, HTTP};

@@ -55,9 +55,9 @@ export async function deleteAllUsers() {
 //Update user
 export async function updateUser(userName: string, updatedData: any) {
   try {
-    // fieldToBeUpdated:string, fieldData:string
-    // let updateData: Record<string, string> = {};
-    // updateData[fieldToBeUpdated] = fieldData;
+    fieldToBeUpdated:string, fieldData:string
+    let updateData: Record<string, string> = {};
+    updateData[fieldToBeUpdated] = fieldData;
 
     const updatedUser = await prisma.user.update({
       where: {

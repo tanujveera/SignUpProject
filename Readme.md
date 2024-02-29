@@ -51,17 +51,22 @@ After creating the migration, to use the functions for that particular migration
 npx prisma generate
 ```
 
-To run the ts file which has the CRUD queries
+In tsconfig.json, change the outDir field.
+This will create the .js files in that directory
 ```sh
-node script.ts
+{
+  "outDir":"./dist"
+}
 ```
 
-Typescript code example to insert and find all the rows
-
+Run typescript command to compile the .ts to .js files
 ```sh
-async function main() {
-  const user = await prisma.userNames.create({data: { name: "vijay", email: "vijay@gmail.com" }, });
-  const user = await prisma.userNames.findMany()
-  console.log(user);
-}
+tsc
+or 
+tsc -b
+```
+
+Run the .js file in dist folder
+```sh
+node dist/index.js
 ```

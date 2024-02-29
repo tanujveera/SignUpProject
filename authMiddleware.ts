@@ -1,17 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import { HTTP } from "./routes/user";
-const { JWT_SECRET } = require("./config");
-const jwt = require("jsonwebtoken");
+import { JwtPayload } from "jsonwebtoken";
+import { JWT_SECRET } from "./config";
+import jwt from "jsonwebtoken";
+
 
 interface AuthRequest extends Request {
-  decodedValue?: any;
+  userId: string
 }
 
-const authMiddleware = (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -21,15 +18,14 @@ const authMiddleware = (
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded: any = jwt.verify(token, JWT_SECRET);
-    req.decodedValue = decoded;
-    next();
+  const decoded: any = jwt.verify(token, JWT_SECRET);
+
+  req.userId = decoded;
+
+  next();
   } catch (err) {
-    return res.json({});
+    return res.json({error:"Error Occured"});
   }
 };
 
-// module.exports = {
-//   authMiddleware
-// };
-export default authMiddleware;
+export { authMiddleware, AuthRequest };

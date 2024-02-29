@@ -26,7 +26,10 @@ export async function getUser(userName: string) {
       username: userName,
     },
   });
-  console.log("Got the user " + user);
+  console.log(user);
+  // if(user==null){  
+  //  return "";
+  // }
   return user;
 }
 //Get all users
@@ -55,11 +58,7 @@ export async function deleteAllUsers() {
 //Update user
 export async function updateUser(userName: string, updatedData: any) {
   try {
-    fieldToBeUpdated:string, fieldData:string
-    let updateData: Record<string, string> = {};
-    updateData[fieldToBeUpdated] = fieldData;
-
-    const updatedUser = await prisma.user.update({
+  const updatedUser = await prisma.user.update({
       where: {
         username: userName,
       },

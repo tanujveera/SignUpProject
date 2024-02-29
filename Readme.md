@@ -45,7 +45,7 @@ To Migrate the prisma to equivalent SQL queries
 ```sh
 npx prisma migrate dev
 ```
-After creating the migration, to use the functions for that particular migrations to be suggested by prisma. We have to generate prisma
+After creating the migration, to use the functions for that particular migrations to be suggested by prisma. We have to generate prisma (@prisma/client)
 
 ```sh
 npx prisma generate
